@@ -33,7 +33,7 @@ def register (request):
     request.session['first_name']=user.first_name
     return redirect('/homepage')
 
-def login (request):
+def user_signin (request):
     try:
         errors = User.objects.login_validator(request.POST)
         if len(errors) < 1:
@@ -47,6 +47,9 @@ def login (request):
     except ValueError:
         messages.error(request, 'User Not Found')
         return redirect ('/')
+
+def login (request):
+    return render (request, 'login.html')
 
 def logout (request):
     try:
