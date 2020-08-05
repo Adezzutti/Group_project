@@ -6,7 +6,14 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Log In</legend>
-                {{ form|crispy }}
+                <div class="registration_data">
+                    <label for="email" class="col-sm-4 col-form-label col-form-label-sm">Email:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="registration_data">
+                    <label for="password" class="col-sm-4 col-form-label col-form-label-sm">Password:</label>
+                    <input type="password" id="password" name="password">
+                </div>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Login</button>

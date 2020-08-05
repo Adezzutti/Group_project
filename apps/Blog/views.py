@@ -8,14 +8,17 @@ def WelcomePage (request):
     users = User.objects.all()
     posts = Post.objects.all()
 
-    for user in users:
-        user.delete()
-    for post in posts:
-        post.delete()
-    context = {}
+    # for user in users:
+    #     user.delete()
+    # for post in posts:
+    #     post.delete()
+    print('session.first_name' in request)
+    context = {
+        'user': {'is_authenticated': 'session.first_name' in request}
+    }
     return render (request, 'home.html', context)
 
-def register (request):
+def user_register (request):
     if request.method == 'POST':
         errors = User.objects.register_validator(request.POST)
         if len(errors) > 0:
@@ -31,13 +34,13 @@ def register (request):
             )
             user.save()
     request.session['first_name']=user.first_name
-    return redirect('/homepage')
+    return redirect('/')
 
 def user_signin (request):
     try:
         errors = User.objects.login_validator(request.POST)
         if len(errors) < 1:
-            user = User.objects.get(email=request.POST.get('login_email'))
+            user = User.objects.filter(email=request.POST.get('login_email'))[0]
             request.session['first_name'] = user.first_name
             return redirect('/homepage')
         else:
@@ -50,6 +53,9 @@ def user_signin (request):
 
 def login (request):
     return render (request, 'login.html')
+
+def register (request):
+    return render (request, 'register.html')
 
 def logout (request):
     try:

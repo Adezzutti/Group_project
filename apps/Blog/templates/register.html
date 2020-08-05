@@ -3,11 +3,30 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <form method="POST">
+        <form method="POST" action="/user_register">
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Join Today</legend>
-                {{ form|crispy }}
+                <div class="registration_data">
+                    <label for="first_name" class="col-sm-4 col-form-label col-form-label-sm"> First Name:</label>
+                    <input type="text" id="first_name" name="first_name">
+                </div>
+                <div class="registration_data">
+                    <label for="last_name" class="col-sm-4 col-form-label col-form-label-sm">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name">
+                </div>
+                <div class="registration_data">
+                    <label for="email" class="col-sm-4 col-form-label col-form-label-sm">Email:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="registration_data">
+                    <label for="password" class="col-sm-4 col-form-label col-form-label-sm">Password:</label>
+                    <input type="password" id="password" name="password">
+                </div>
+                <div class="registration_data">
+                    <label for="confirm_password" class="col-sm-4 col-form-label col-form-label-sm">Confirm Password:</label>
+                    <input type="password" id="confirm_password" name="confirm_password">
+                </div>
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Sign Up</button>
@@ -15,7 +34,7 @@
         </form>
         <div class="border-top pt-3">
             <small class="text-muted">
-                Already Have An Account? <a class="ml-2" href="#">Sign In</a>
+                Already Have An Account? <a class="ml-2" href="/login">Sign In</a>
             </small>
         </div>
     </div>
