@@ -13,10 +13,7 @@ def WelcomePage (request):
     # for post in posts:
     #     post.delete()
     print('session.first_name' in request)
-    context = {
-        'user': {'is_authenticated': 'session.first_name' in request}
-    }
-    return render (request, 'home.html', context)
+    return render (request, 'home.html')
 
 def user_register (request):
     if request.method == 'POST':
@@ -33,7 +30,8 @@ def user_register (request):
                 password = request.POST.get('password').encode(),
             )
             user.save()
-    request.session['first_name']=user.first_name
+    request.session['first_name'] = user.first_name
+    request.session['user_email'] = user.email
     return redirect('/')
 
 def user_signin (request):
@@ -42,6 +40,7 @@ def user_signin (request):
         if len(errors) < 1:
             user = User.objects.filter(email=request.POST.get('login_email'))[0]
             request.session['first_name'] = user.first_name
+            request.session['user_email'] = user.email
             return redirect('/homepage')
         else:
             messages.error(request, 'Password Is Not Valid')
@@ -54,15 +53,26 @@ def user_signin (request):
 def login (request):
     return render (request, 'login.html')
 
+def profile (request):
+    user = None
+    try:
+        user = User.objects.filter(email=request.session['user_email'])[0]
+    except KeyError:
+        return redirect('/login')
+    
+    context = {'user': user}
+    return render (request, 'profile.html', context)
+
 def register (request):
     return render (request, 'register.html')
 
 def logout (request):
     try:
         del request.session['first_name']
+        del request.session['user_email']
     except KeyError:
         pass
-    return HttpResponse("You're Logged out")
+    return render (request, 'logout.html')
 
 def delete(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -94,7 +104,12 @@ def allposts(request):
 
 
 def newpost(request):
-    return render(request, 'new_post.html')
+    user = None
+    try:
+        user = User.objects.filter(email=request.session['user_email'])[0]
+    except KeyError:
+        return redirect('/login')
+    return render(request, 'post_form.html')
 
 def postdetail(request, post_id):
     first_name = request.session['first_name']
